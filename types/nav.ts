@@ -1,0 +1,1 @@
+export type NavColor = 'blue' | 'purple' | 'indigo' | 'green' | 'teal' | 'cyan' | 'orange' | 'gray';

@@ -1,0 +1,253 @@
+import { WaiverMasterListEntry } from './types';
+
+export const waiverMasterListEntries: WaiverMasterListEntry[] = [
+    {
+        id: "1",
+        startDate: "2024-07-17",
+        endDate: "2025-07-16",
+        waiverAuthorization: "2024-LFG-183492",
+        tailNumber: "N117NG",
+        callSign: "PENSTAR",
+        aircraftType: "BK117",
+        companyName: "PennSTAR Flight/Metro",
+        itineraryVenueDestination: "DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "2",
+        startDate: "2024-07-17",
+        endDate: "2025-07-16",
+        waiverAuthorization: "2024-LFG-183492",
+        tailNumber: "N145CL",
+        callSign: "PENSTAR",
+        aircraftType: "EC145",
+        companyName: "PennSTAR Flight/Metro",
+        itineraryVenueDestination: "DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "3",
+        startDate: "2024-07-17",
+        endDate: "2025-07-16",
+        waiverAuthorization: "2024-LFG-183492",
+        tailNumber: "N602MM",
+        callSign: "PENSTAR",
+        aircraftType: "EC145",
+        companyName: "PennSTAR Flight/Metro",
+        itineraryVenueDestination: "DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "4",
+        startDate: "2024-07-17",
+        endDate: "2025-07-16",
+        waiverAuthorization: "2024-LFG-183492",
+        tailNumber: "N61UP",
+        callSign: "PENSTAR",
+        aircraftType: "EC145",
+        companyName: "PennSTAR Flight/Metro",
+        itineraryVenueDestination: "DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "5",
+        startDate: "2024-07-17",
+        endDate: "2025-07-16",
+        waiverAuthorization: "2024-LFG-183492",
+        tailNumber: "N117NC",
+        callSign: "PENSTAR",
+        aircraftType: "BK117",
+        companyName: "PennSTAR Flight/Metro",
+        itineraryVenueDestination: "DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "6",
+        startDate: "2024-07-25",
+        endDate: "2025-07-24",
+        waiverAuthorization: "2024-LFG-181938-A",
+        tailNumber: "N740MH",
+        callSign: "MEDSTAR",
+        aircraftType: "EC35",
+        companyName: "MedSTAR Transport",
+        itineraryVenueDestination: "DC08 DC09 DC17 OMD5 3MD1 1MD1",
+        status: "ACTIVE"
+    },
+    {
+        id: "7",
+        startDate: "2024-07-25",
+        endDate: "2025-07-24",
+        waiverAuthorization: "2024-LFG-181938-A",
+        tailNumber: "N143MH",
+        callSign: "MEDSTAR",
+        aircraftType: "EC35",
+        companyName: "MedSTAR Transport",
+        itineraryVenueDestination: "DC08 DC09 DC17 OMD5 3MD1 1MD1",
+        status: "ACTIVE"
+    },
+    {
+        id: "8",
+        startDate: "2024-07-25",
+        endDate: "2025-07-24",
+        waiverAuthorization: "2024-LFG-181938-A",
+        tailNumber: "N135MH",
+        callSign: "MEDSTAR",
+        aircraftType: "EC35",
+        companyName: "MedSTAR Transport",
+        itineraryVenueDestination: "DC08 DC09 DC17 OMD5 3MD1 1MD1",
+        status: "ACTIVE"
+    },
+    {
+        id: "9",
+        startDate: "2024-07-25",
+        endDate: "2025-07-24",
+        waiverAuthorization: "2024-LFG-181938-A",
+        tailNumber: "N138MH",
+        callSign: "MEDSTAR",
+        aircraftType: "EC35",
+        companyName: "MedSTAR Transport",
+        itineraryVenueDestination: "DC08 DC09 DC17 OMD5 3MD1 1MD1",
+        status: "ACTIVE"
+    },
+    {
+        id: "10",
+        startDate: "2024-08-05",
+        endDate: "2025-07-31",
+        waiverAuthorization: "2024-DIS-183671",
+        tailNumber: "FA3PKLLETW",
+        callSign: "CLRKIRV",
+        aircraftType: "UAS",
+        companyName: "Clark Construction",
+        itineraryVenueDestination: "Disneyland, California",
+        status: "ACTIVE"
+    },
+    {
+        id: "11",
+        startDate: "2024-08-13",
+        endDate: "2025-08-12",
+        waiverAuthorization: "2024-UFR-183512",
+        tailNumber: "FA3YWFRL3Y",
+        callSign: "MPDUAS2",
+        aircraftType: "Quadcopter",
+        companyName: "Washington, DC Metroplex",
+        itineraryVenueDestination: "",
+        status: "ACTIVE"
+    },
+    {
+        id: "12",
+        startDate: "2024-08-13",
+        endDate: "2025-08-12",
+        waiverAuthorization: "2024-UFR-183512",
+        tailNumber: "FA3YWH44E9",
+        callSign: "MPDUAS5",
+        aircraftType: "Quadcopter",
+        companyName: "Washington, DC Metroplex",
+        itineraryVenueDestination: "",
+        status: "ACTIVE"
+    },
+    {
+        id: "13",
+        startDate: "2024-08-13",
+        endDate: "2025-08-12",
+        waiverAuthorization: "2024-UFR-183512",
+        tailNumber: "FA3YWFWF7P",
+        callSign: "MPDUAS3",
+        aircraftType: "Quadcopter",
+        companyName: "Washington, DC Metroplex",
+        itineraryVenueDestination: "",
+        status: "ACTIVE"
+    },
+    {
+        id: "14",
+        startDate: "2024-08-13",
+        endDate: "2025-08-12",
+        waiverAuthorization: "2024-UFR-183512",
+        tailNumber: "FA3YWFNXA",
+        callSign: "MPSUAS1",
+        aircraftType: "Quadcopter",
+        companyName: "Washington, DC Metroplex",
+        itineraryVenueDestination: "",
+        status: "ACTIVE"
+    },
+    {
+        id: "15",
+        startDate: "2024-08-13",
+        endDate: "2025-08-12",
+        waiverAuthorization: "2024-UFR-183512",
+        tailNumber: "FA3YWFYAAH",
+        callSign: "MPSUAS4",
+        aircraftType: "Quadcopter",
+        companyName: "Washington, DC Metroplex",
+        itineraryVenueDestination: "",
+        status: "ACTIVE"
+    },
+    {
+        id: "16",
+        startDate: "2024-08-20",
+        endDate: "2025-08-19",
+        waiverAuthorization: "2024-LFG-183122-A",
+        tailNumber: "N135VV",
+        callSign: "LG11",
+        aircraftType: "H135P2 Helicopter",
+        companyName: "Carilion Clinic / Med-Transport",
+        itineraryVenueDestination: "KDCA 72VA 9VA2 DC09 DC08 DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "17",
+        startDate: "2024-08-20",
+        endDate: "2025-08-19",
+        waiverAuthorization: "2024-LFG-183122-A",
+        tailNumber: "N452MT",
+        callSign: "LG10",
+        aircraftType: "H135P2 Helicopter",
+        companyName: "Carilion Clinic / Med-Transport",
+        itineraryVenueDestination: "KDCA 72VA 9VA2 DC09 DC08 DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "18",
+        startDate: "2024-08-20",
+        endDate: "2025-08-19",
+        waiverAuthorization: "2024-LFG-183122-A",
+        tailNumber: "N135WL",
+        callSign: "LG10",
+        aircraftType: "H135P2 Helicopter",
+        companyName: "Carilion Clinic / Med-Transport",
+        itineraryVenueDestination: "KDCA 72VA 9VA2 DC09 DC08 DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "19",
+        startDate: "2024-08-20",
+        endDate: "2025-08-19",
+        waiverAuthorization: "2024-LFG-183122-A",
+        tailNumber: "N135LX",
+        callSign: "LG12",
+        aircraftType: "H135P2 Helicopter",
+        companyName: "Carilion Clinic / Med-Transport",
+        itineraryVenueDestination: "KDCA 72VA 9VA2 DC09 DC08 DC17",
+        status: "ACTIVE"
+    },
+    {
+        id: "20",
+        startDate: "2024-08-27",
+        endDate: "2025-08-27",
+        waiverAuthorization: "2024-LFG-184050",
+        tailNumber: "N410W",
+        callSign: "N410W",
+        aircraftType: "EC130",
+        companyName: "Air Methods",
+        itineraryVenueDestination: "KDCA",
+        status: "ACTIVE"
+    }
+];
+
+export const users = [
+    { id: 1, firstName: "John", lastName: "Smith", email: "john.smith@example.com", assignedWaivers: 5, role: "TSA Analyst" },
+    { id: 2, firstName: "Jane", lastName: "Doe", email: "jane.doe@example.com", assignedWaivers: 3, role: "FAA Analyst" },
+    { id: 3, firstName: "Emily", lastName: "Johnson", email: "emily.johnson@example.com", assignedWaivers: 7, role: "TSA Analyst" },
+    { id: 4, firstName: "Michael", lastName: "Brown", email: "michael.brown@example.com", assignedWaivers: 4, role: "FAA Analyst" },
+    { id: 5, firstName: "David", lastName: "Williams", email: "david.williams@example.com", assignedWaivers: 6, role: "TSA Analyst" },
+    { id: 6, firstName: "Sarah", lastName: "Davis", email: "sarah.davis@example.com", assignedWaivers: 2, role: "FAA Analyst" }
+];

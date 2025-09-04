@@ -1,0 +1,291 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, User, Mail, Shield } from "lucide-react";
+import { RHFInput } from "@/components/shared/RHFInput";
+import { PasswordChangeModal } from "./PasswordChangeModal";
+import { updateUserSettings } from "@/lib/actions/settings/settings-actions";
+import {
+    updateSettingsSchema,
+    type UpdateSettingsFormData,
+    type UserSettingsData
+} from "@/lib/validation/settings-validate";
+import toast from "react-hot-toast";
+
+interface SettingsContainerProps {
+    initialData?: UserSettingsData;
+    initialError?: string;
+}
+
+export function SettingsContainer({ initialData, initialError }: SettingsContainerProps) {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { update: updateSession } = useSession();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isDirty },
+        reset,
+    } = useForm<UpdateSettingsFormData>({
+        resolver: zodResolver(updateSettingsSchema),
+        mode: "onBlur",
+        defaultValues: initialData ? {
+            firstName: initialData.firstName,
+            middleName: initialData.middleName || "",
+            lastName: initialData.lastName,
+            workPhone: initialData.workPhone || "",
+            mobilePhone: initialData.mobilePhone || "",
+        } : undefined,
+    });
+
+    const onSubmit = async (data: UpdateSettingsFormData) => {
+        setIsSubmitting(true);
+
+        try {
+            const result = await updateUserSettings(data);
+
+            if (result.success) {
+                toast.success(result.message || "Settings updated successfully");
+                reset(data);
+
+                // Update the NextAuth session with new name data
+                await updateSession({
+                    firstName: data.firstName,
+                    lastName: data.lastName
+                });
+            } else {
+                toast.error(result.error || "Failed to update settings");
+            }
+        } catch (error) {
+            console.error("Settings update error:", error);
+            toast.error("An unexpected error occurred");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (initialError) {
+        return (
+            <div className="max-w-4xl mx-auto p-6">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 mt-0.5" />
+                    <div>
+                        <h3 className="text-sm font-medium text-red-800">Error Loading Settings</h3>
+                        <p className="text-sm text-red-700 mt-1">{initialError}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!initialData) {
+        return
+    }
+
+    const getDaysUntilExpiry = () => {
+        if (!initialData.passwordExpire) return null;
+        try {
+            const expireDate = new Date(initialData.passwordExpire);
+            const today = new Date();
+            const timeDiff = expireDate.getTime() - today.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return daysDiff;
+        } catch {
+            return null;
+        }
+    };
+
+    const daysUntilExpiry = getDaysUntilExpiry();
+    const isPasswordExpiringSoon = daysUntilExpiry !== null && daysUntilExpiry <= 30;
+
+    return (
+        <div className="h-full max-h-[calc(100vh-120px)] overflow-hidden">
+            <form onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
+                <div className="flex-1 grid grid-cols-1 xl:grid-cols-3 gap-4 p-4">
+
+                    {/* Left Column */}
+                    <div className="xl:col-span-1 space-y-4">
+                        {/* Account Information */}
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg">
+                            <div className="px-4 py-3 border-b border-gray-200">
+                                <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                                    <User className="w-4 h-4" />
+                                    Account Information
+                                </h2>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                <div>
+                                    <label className="text-xs font-medium text-gray-600">User ID</label>
+                                    <div className="mt-1 px-2 py-1.5 bg-gray-100 border border-gray-200 rounded text-xs text-gray-700 font-mono">
+                                        {initialData.userId}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-medium text-gray-600 flex items-center gap-1">
+                                        <Mail className="w-3 h-3" />
+                                        Primary Email
+                                    </label>
+                                    <div className="mt-1 px-2 py-1.5 bg-gray-100 border border-gray-200 rounded text-xs text-gray-700">
+                                        {initialData.primaryEmail}
+                                    </div>
+                                </div>
+
+                                {initialData.secondaryEmail && (
+                                    <div>
+                                        <label className="text-xs font-medium text-gray-600">Secondary Email</label>
+                                        <div className="mt-1 px-2 py-1.5 bg-gray-100 border border-gray-200 rounded text-xs text-gray-700">
+                                            {initialData.secondaryEmail}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="text-xs font-medium text-gray-600">Created</label>
+                                        <div className="mt-1 px-2 py-1.5 bg-gray-100 border border-gray-200 rounded text-xs text-gray-700">
+                                            {initialData.creationDate || "N/A"}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-xs font-medium text-gray-600">Last Login</label>
+                                        <div className="mt-1 px-2 py-1.5 bg-gray-100 border border-gray-200 rounded text-xs text-gray-700">
+                                            {initialData.lastLogin || "Never"}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Security Section*/}
+                        <div className="pt-3 border-t border-gray-200">
+                            <label className="text-xs font-medium text-gray-600 mb-2 block">Account Security</label>
+                            <PasswordChangeModal passwordExpire={initialData.passwordExpire} />
+                            {isPasswordExpiringSoon && <p className="text-red-400 text-xs mt-2">Password expiring in {daysUntilExpiry} days.</p>}
+                        </div>
+
+                        {/* User Roles (Show only for internal users) */}
+                        {initialData.isInternal && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg">
+                                <div className="px-4 py-3 border-b border-blue-200">
+                                    <h2 className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+                                        <Shield className="w-4 h-4" />
+                                        Permissions
+                                        <span className="font-light text-grey-200 ml-auto text-[8px]">Internal View only</span>
+                                    </h2>
+                                </div>
+                                <div className="p-4">
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {initialData.roles.map((role) => (
+                                            <span
+                                                key={role}
+                                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                            >
+                                                {role}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right Columns */}
+                    <div className="xl:col-span-2 space-y-4">
+                        {/* Personal Information */}
+                        <div className="bg-white border border-gray-200 rounded-lg">
+                            <div className="px-4 py-3 border-b border-gray-200">
+                                <h2 className="text-sm font-semibold text-gray-900">Personal Information</h2>
+                            </div>
+                            <div className="p-4">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <RHFInput
+                                        label="First Name"
+                                        register={register("firstName")}
+                                        error={errors.firstName}
+                                        required
+                                        placeholder="Enter first name"
+                                        autoComplete="given-name"
+                                    />
+
+                                    <RHFInput
+                                        label="Middle Name"
+                                        register={register("middleName")}
+                                        error={errors.middleName}
+                                        placeholder="Enter middle name (optional)"
+                                        autoComplete="additional-name"
+                                    />
+
+                                    <RHFInput
+                                        label="Last Name"
+                                        register={register("lastName")}
+                                        error={errors.lastName}
+                                        required
+                                        placeholder="Enter last name"
+                                        autoComplete="family-name"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Contact Information */}
+                        <div className="bg-white border border-gray-200 rounded-lg">
+                            <div className="px-4 py-3 border-b border-gray-200">
+                                <h2 className="text-sm font-semibold text-gray-900">Contact Information</h2>
+                            </div>
+                            <div className="p-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <RHFInput
+                                        label="Work Phone"
+                                        register={register("workPhone")}
+                                        error={errors.workPhone}
+                                        type="tel"
+                                        placeholder="Enter work phone (optional)"
+                                        autoComplete="work tel"
+                                    />
+
+                                    <RHFInput
+                                        label="Mobile Phone"
+                                        register={register("mobilePhone")}
+                                        error={errors.mobilePhone}
+                                        type="tel"
+                                        placeholder="Enter mobile phone (optional)"
+                                        autoComplete="mobile tel"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex-shrink-0 border-t border-gray-200 py-3">
+                    <div className="flex justify-end space-x-3">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => reset()}
+                            disabled={isSubmitting || !isDirty}
+                            className="h-10 px-4 text-sm"
+                        >
+                            Reset Changes
+                        </Button>
+
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting || !isDirty}
+                            className="bg-blue-600 hover:bg-blue-700 text-white h-10 px-4 text-sm"
+                        >
+                            Save Changes
+                        </Button>
+                    </div>
+                </div>
+            </form >
+        </div >
+    );
+}
