@@ -10,6 +10,7 @@ import {
     type CreateAccountFormData,
 } from "@/lib/validation/auth-validate";
 import { sendVerificationEmail } from "@/lib/email/email-service";
+import { generateVerificationToken } from "./email-verification-actions";
 
 
 export async function getCurrentUser() {
@@ -142,19 +143,38 @@ export async function createUserAccount(accountData: CreateAccountFormData) {
             });
         });
 
-        // Send Verifification email
+        // Generate verification token and send verification email
         try {
+            const tokenResult = await generateVerificationToken(userId);
+
+            if (!tokenResult.success) {
+                console.error('Failed to generate verification token:', tokenResult.error);
+                return {
+                    success: false,
+                    error: "Account created but failed to send verification email. Please contact support.",
+                };
+            }
+
             const emailResult = await sendVerificationEmail(
-                'andrewgura94@gmail.com',
-                password,
+                primaryEmail,
+                tokenResult.token!,
                 firstName
             );
 
             if (!emailResult.success) {
-                console.error('Failed to send welcome email:', emailResult.error);
+                console.error('Failed to send verification email:', emailResult.error);
+                return {
+                    success: false,
+                    error: "Account created but failed to send verification email. Please contact support.",
+                };
             }
+
         } catch (emailError) {
-            console.error('Verf email error:', emailError);
+            console.error('Verification email error:', emailError);
+            return {
+                success: false,
+                error: "Account created but failed to send verification email. Please contact support.",
+            };
         }
 
         return {

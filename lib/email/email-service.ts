@@ -1,98 +1,132 @@
 import nodemailer from 'nodemailer';
 
 const createTransporter = () => {
-    return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_APP_PASSWORD
-        }
-    });
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD
+    }
+  });
 };
 
 export interface EmailOptions {
-    to: string;
-    subject: string;
-    text?: string;
-    html?: string;
+  to: string;
+  subject: string;
+  text?: string;
+  html?: string;
 }
 
 export async function sendEmail({ to, subject, text, html }: EmailOptions) {
-    try {
-        const transporter = createTransporter();
+  try {
+    const transporter = createTransporter();
 
-        const result = await transporter.sendMail({
-            from: `"Your App" <${process.env.EMAIL_USER}>`,
-            to,
-            subject,
-            text,
-            html
-        });
+    const result = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+      text,
+      html
+    });
 
-        console.log('Email sent successfully:', result.messageId);
-        return { success: true, messageId: result.messageId };
-    } catch (error) {
-        console.error('Email sending failed:', error);
-        return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
-    }
+    return { success: true, messageId: result.messageId };
+  } catch (error) {
+    console.error('Email sending failed:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
 }
 
-export async function sendVerificationEmail(email: string, password: string, name: string) {
-    const html = `
+export async function sendVerificationEmail(email: string, verificationToken: string, name: string) {
+  const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email/${verificationToken}`;
+
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
         <style>
           body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
           .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #4F46E5; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
+          .header { background: #4F46E5; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
           .content { background: #f9f9f9; padding: 30px; }
           .footer { background: #e5e7eb; padding: 15px; border-radius: 0 0 8px 8px; font-size: 12px; color: #6b7280; }
-          .password-box { background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 4px; margin: 20px 0; }
-          .button { display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin: 20px 0; }
+          .verification-box { background: #f0f9ff; border: 1px solid #0ea5e9; padding: 20px; border-radius: 4px; margin: 20px 0; text-align: center; }
+          .button { 
+            display: inline-block; 
+            background: #4F46E5; 
+            color: white !important; 
+            padding: 15px 30px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: bold;
+            margin: 20px 0;
+            font-size: 16px;
+          }
+          .button:hover { background: #4338ca; }
+          .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
+          .highlight { color: #4F46E5; font-weight: bold; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Welcome to Our Platform!</h1>
+            <h1>🎉 Welcome to Our Platform!</h1>
+            <p style="margin: 0; font-size: 18px; opacity: 0.9;">Just one more step to get started</p>
           </div>
           <div class="content">
-            <p>Hi ${name},</p>
-            <p>Your account has been successfully created! We're excited to have you on board.</p>
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>Thank you for creating your account! We're excited to have you on board.</p>
             
-            <div class="password-box">
-              <h3>Your Temporary Login Details:</h3>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Temporary Password:</strong> <code>${password}</code></p>
+            <div class="verification-box">
+              <h3 style="margin-top: 0; color: #0ea5e9;">📧 Verify Your Email Address</h3>
+              <p>To complete your registration and start using your account, please verify your email address by clicking the button below:</p>
+              
+              <a href="${verificationUrl}" class="button">Verify My Email</a>
+              
+              <p style="font-size: 14px; color: #6b7280; margin-top: 20px;">
+                This verification link will expire in <span class="highlight">24 hours</span>.
+              </p>
             </div>
             
-            <p><strong>Important:</strong> Please log in and change your password immediately for security.</p>
+            <div class="warning">
+              <p><strong>⚠️ Important:</strong></p>
+              <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>You cannot log in until your email is verified</li>
+                <li>This link is single-use and expires in 24 hours</li>
+                <li>If you didn't create this account, please ignore this email</li>
+              </ul>
+            </div>
             
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" class="button">Login Now</a>
+            <p>If the button doesn't work, copy and paste this link into your browser:</p>
+            <p style="word-break: break-all; background: #f1f5f9; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 14px;">
+              ${verificationUrl}
+            </p>
             
-            <p>If you have any questions, please don't hesitate to reach out to our support team.</p>
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;">
+            
+            <p>Need help? Contact our support team - we're here to help!</p>
+            <p>Welcome aboard! 🚀</p>
           </div>
           <div class="footer">
             <p>This is an automated message. Please do not reply to this email.</p>
+            <p>If you're having trouble with the verification link, you can request a new one from the login page.</p>
           </div>
         </div>
       </body>
     </html>
   `;
 
-    return sendEmail({
-        to: email,
-        subject: 'Welcome! Your Account Has Been Created',
-        text: `Welcome ${name}! Your account has been created. Your temporary password is: ${password}. Please log in and change your password.`,
-        html
-    });
+  return sendEmail({
+    to: "andrewgura94@gmail.com",
+    subject: 'Verify your email address to login the AAP platform.',
+    text: `Hi ${name}! Please verify your email address by clicking this link: ${verificationUrl}. This link expires in 24 hours. If you didn't create this account, please ignore this email.`,
+    html
+  });
 }
 
 export async function sendPasswordResetEmail(email: string, resetToken: string) {
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password/${resetToken}`;
 
-    const html = `
+  const html = `
     <!DOCTYPE html>
     <html>
       <head>
@@ -132,10 +166,10 @@ export async function sendPasswordResetEmail(email: string, resetToken: string) 
     </html>
   `;
 
-    return sendEmail({
-        to: email,
-        subject: 'Password Reset Request',
-        text: `Click this link to reset your password: ${resetUrl}. This link expires in 1 hour.`,
-        html
-    });
+  return sendEmail({
+    to: email,
+    subject: 'Password Reset Request for AAP',
+    text: `Click this link to reset your password: ${resetUrl}. This link expires in 1 hour.`,
+    html
+  });
 }

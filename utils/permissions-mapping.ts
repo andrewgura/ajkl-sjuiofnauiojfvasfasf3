@@ -49,6 +49,7 @@ export const PAGE_PERMISSIONS = {
     '/administrator/fbo-management': ['Admin'],
     '/administrator/lookup-lists': ['Admin'],
     '/administrator/banner-management': ['Admin'],
+    '/administrator/database-actions': ['Admin'],
 } as const
 
 export const ROLES = {
