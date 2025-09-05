@@ -10,6 +10,12 @@ export interface DeleteUserResult {
     message?: string;
 }
 
+export interface VerifyAccountResult {
+    success: boolean;
+    error?: string;
+    message?: string;
+}
+
 export async function deleteUserCompletely(userId: string): Promise<DeleteUserResult> {
     const session = await getServerSession(authOptions);
 
@@ -28,7 +34,6 @@ export async function deleteUserCompletely(userId: string): Promise<DeleteUserRe
     }
 
     try {
-        // Check if user exists
         const existingUser = await db
             .select('USER_ID', 'FIRST_NAME', 'LAST_NAME', 'PRIMARY_EMAIL')
             .from('ACCOUNTS')
@@ -57,7 +62,6 @@ export async function deleteUserCompletely(userId: string): Promise<DeleteUserRe
                 .del();
 
             // Accounts + Profile_Roles
-            // CASCADE delete for PROFILE_ROLES
             await trx('ACCOUNTS')
                 .where('USER_ID', userId)
                 .del();
@@ -83,6 +87,86 @@ export async function deleteUserCompletely(userId: string): Promise<DeleteUserRe
         return {
             success: false,
             error: "Failed to delete user. Check console for details."
+        };
+    }
+}
+
+export async function autoVerifyAccount(userId: string): Promise<VerifyAccountResult> {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.roles?.includes('Admin')) {
+        return {
+            success: false,
+            error: "Not authorized"
+        };
+    }
+
+    if (!userId || userId.trim() === '') {
+        return {
+            success: false,
+            error: "User ID is required"
+        };
+    }
+
+    try {
+        const existingUser = await db
+            .select('USER_ID', 'FIRST_NAME', 'LAST_NAME', 'PRIMARY_EMAIL', 'ACCOUNT_ACTIVE')
+            .from('ACCOUNTS')
+            .where('USER_ID', userId)
+            .first();
+
+        if (!existingUser) {
+            return {
+                success: false,
+                error: "User not found"
+            };
+        }
+
+        // Check if already verified
+        if (existingUser.ACCOUNT_ACTIVE === 1) {
+            return {
+                success: false,
+                error: "Account is already verified"
+            };
+        }
+
+        await db.transaction(async (trx) => {
+            // Activate the account
+            await trx('ACCOUNTS')
+                .where('USER_ID', userId)
+                .update({
+                    ACCOUNT_ACTIVE: 1,
+                });
+
+            // Mark all verification tokens as used
+            await trx('EMAIL_VERIFICATION_TOKENS')
+                .where('USER_ID', userId)
+                .where('USED', 0)
+                .update({
+                    USED: 1,
+                });
+        });
+
+        return {
+            success: true,
+            message: `Account for ${existingUser.FIRST_NAME} ${existingUser.LAST_NAME} (${existingUser.PRIMARY_EMAIL}) has been verified successfully`
+        };
+
+    } catch (error: unknown) {
+        console.error("Error verifying account:", error);
+
+        const errorMessage = error instanceof Error ? error.message : String(error);
+
+        if (errorMessage.includes("ORA-")) {
+            return {
+                success: false,
+                error: "Database error occurred. Check console for details."
+            };
+        }
+
+        return {
+            success: false,
+            error: "Failed to verify account. Check console for details."
         };
     }
 }

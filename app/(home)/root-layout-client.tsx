@@ -69,7 +69,6 @@ export function RootLayoutClient({
 
             setExpandedSections(newExpandedSections)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname])
 
     const handleSectionToggle = (section: keyof ExpandedSections) => {
@@ -97,7 +96,7 @@ export function RootLayoutClient({
     }
 
     return (
-        <div className="flex flex-col h-screen bg-slate-50">
+        <div className="flex flex-col h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800">
             <AppBanner />
 
             <div className="flex flex-1 overflow-hidden">

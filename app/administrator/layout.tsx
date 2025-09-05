@@ -6,17 +6,17 @@ import { usePathname } from "next/navigation";
 
 const AdminHeader = () => {
     return (
-        <header className="h-14 border-b border-gray-200 flex items-center justify-between px-4 bg-white">
+        <header className="h-14 border-b border-slate-600 flex items-center justify-between px-4 bg-slate-800">
             <div className="flex items-center space-x-2">
                 <Link
                     href="/"
-                    className="text-gray-600 hover:text-gray-900 flex items-center space-x-2"
+                    className="text-slate-300 hover:text-white flex items-center space-x-2"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     <span className="text-sm">Back to Waivers</span>
                 </Link>
-                <span className="text-gray-300 mx-2">/</span>
-                <span className="text-sm text-gray-600">Admin Portal</span>
+                <span className="text-slate-500 mx-2">/</span>
+                <span className="text-sm text-slate-300">Admin Portal</span>
             </div>
         </header>
     );
@@ -89,14 +89,14 @@ const AdminNav = () => {
                     key={id}
                     href={`/administrator/${id}`}
                     className={`w-full flex items-center px-4 py-2 text-sm ${pathname === `/administrator/${id}`
-                        ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-500'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-blue-800 text-blue-100 border-r-2 border-blue-400'
+                        : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                         }`}
                 >
                     <Icon className="w-4 h-4 mr-3 flex-shrink-0" />
                     <div className="flex flex-col">
                         <span className="font-medium">{label}</span>
-                        <span className="text-xs text-gray-500">{description}</span>
+                        <span className="text-xs text-slate-400">{description}</span>
                     </div>
                 </Link>
             ))}
@@ -113,10 +113,10 @@ export default function AdministratorLayout({
         <div className="h-screen flex flex-col">
             <AdminHeader />
             <div className="flex-1 flex overflow-hidden">
-                <aside className="w-80 bg-white border-r border-gray-200 flex-shrink-0 overflow-y-auto">
+                <aside className="w-80 bg-slate-800 border-r border-slate-600 flex-shrink-0 overflow-y-auto">
                     <AdminNav />
                 </aside>
-                <main className="flex-1 overflow-y-auto bg-gray-50">
+                <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800">
                     {children}
                 </main>
             </div>

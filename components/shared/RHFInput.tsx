@@ -37,12 +37,12 @@ export function RHFInput({
 
     return (
         <div className={className}>
-            <Label className={`text-sm text-black flex items-center gap-1.5 ${labelStyle}`}>
-                {label} {required && <span className="text-red-500 text-sm">*</span>}
+            <Label className={`text-white text-sm font-medium mb-2 block ${labelStyle}`}>
+                {label} {required && <span className="text-red-400">*</span>}
             </Label>
 
             {description && (
-                <p className="text-xs text-gray-500 mt-0.5 mb-1">{description}</p>
+                <p className="text-xs text-slate-400 mt-0.5 mb-1">{description}</p>
             )}
 
             <input
@@ -51,14 +51,17 @@ export function RHFInput({
                 placeholder={placeholder}
                 disabled={disabled}
                 autoComplete={autoComplete}
-                className={`w-full h-9 px-3 text-sm border rounded-md transition-colors focus:outline-none focus:ring ring-offset-4 mt-1 ${errorMessage
-                    ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-                    : "border-slate-300 focus:border-blue-500 focus:ring-blue-500"
-                    } ${disabled ? "bg-gray-50 cursor-not-allowed opacity-50" : "bg-white"}`}
+                className={`w-full h-9 px-3 text-sm border rounded-md transition-colors focus:outline-none focus:ring focus:ring-blue-400/30 mt-1 bg-white/5 border-white/20 text-white placeholder:text-blue-200 focus:border-blue-400 ${errorMessage
+                        ? "border-red-400 focus:border-red-400 focus:ring-red-400/30"
+                        : ""
+                    } ${disabled
+                        ? "bg-white/5 cursor-not-allowed opacity-50"
+                        : ""
+                    }`}
             />
 
             {errorMessage && (
-                <p className="text-red-500 text-xs mt-0.5">{errorMessage}</p>
+                <p className="text-red-300 text-xs mt-1">{errorMessage}</p>
             )}
         </div>
     );

@@ -98,11 +98,10 @@ function RecoveryForm({
           </div>
         </div>
 
-        <DialogFooter className="gap-3">
+        <DialogFooter>
           <Button
             type="button"
             variant="outline"
-            className="h-10 px-4 bg-white border-white/20 text-black hover:border-white/30"
             onClick={onCancel}
             disabled={isSubmitting}
           >
@@ -110,8 +109,6 @@ function RecoveryForm({
           </Button>
           <Button
             type="submit"
-            className={`h-10 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg shadow-lg transition-all duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
             disabled={isSubmitting}
           >
             {isSubmitting ? (

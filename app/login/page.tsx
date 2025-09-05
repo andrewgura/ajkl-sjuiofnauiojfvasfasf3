@@ -152,7 +152,7 @@ export default function LoginPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setShowForgotPassword(true)}
-                    className="w-full h-9 bg-transparent border-white/20 text-white hover:bg-white/5 hover:border-white/30"
+                    className="w-full h-9 bg-transparent border-white/20 text-white hover:border-white/30"
                   >
                     Forgot Password?
                   </Button>
@@ -160,7 +160,7 @@ export default function LoginPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setShowCreateAccount(true)}
-                    className="w-full h-9 bg-transparent border-white/20 text-white hover:bg-white/5 hover:border-white/30"
+                    className="w-full h-9 bg-transparent border-white/20 text-white hover:border-white/30"
                   >
                     Create Account
                   </Button>

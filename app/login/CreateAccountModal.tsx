@@ -10,8 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { RHFInput } from "@/components/shared/RHFInput";
-import { Section } from "@/components/shared/Section";
-import InfoAlert from "@/components/shared/InfoAlert";
 import { createUserAccount } from "@/lib/actions/auth/auth-actions";
 import {
   createAccountSchema,
@@ -34,7 +32,6 @@ export default function CreateAccountModal({
     register,
     handleSubmit,
     formState: { errors },
-    setError,
     reset,
   } = useForm<CreateAccountFormData>({
     resolver: zodResolver(createAccountSchema),
@@ -45,15 +42,12 @@ export default function CreateAccountModal({
     setIsSubmitting(true);
 
     try {
-      // Pass the complete form data to createUserAccount
       const result = await createUserAccount(data);
 
       if (result.success) {
         reset();
-
         handleClose();
-
-        toast.success("Account created succesfully! Check your email to verify your account.")
+        toast.success("Account created successfully! Check your email to verify your account.")
       }
     } catch (error) {
       console.error("Account creation error:", error);
@@ -70,27 +64,33 @@ export default function CreateAccountModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl bg-slate-900/95 backdrop-blur-xl border border-white/20 shadow-2xl flex flex-col p-0 rounded-lg">
-        <DialogHeader className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm border-b border-white/10 px-6 py-3 flex-shrink-0">
-          <DialogTitle className="text-lg font-semibold text-white">
+      <DialogContent className="max-w-4xl bg-slate-900/95 backdrop-blur-xl border border-white/20 shadow-2xl flex flex-col p-0 rounded-2xl">
+        <DialogHeader className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 backdrop-blur-sm border-b border-white/10 px-6 py-4 flex-shrink-0 rounded-t-2xl">
+          <DialogTitle className="text-xl font-bold text-white">
             Create New Account
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
-          <div className="px-6 py-3 flex-1 overflow-y-auto space-y-3">
-            <InfoAlert
-              title={
-                <>
-                  Fields marked with a <span className="text-red-400">*</span>{" "}
-                  are required. You will receive an email to verify your account.
-                </>
-              }
-              variant="blue"
-            />
+          <div className="px-6 py-4 flex-1 overflow-y-auto space-y-6">
 
-            {/* Personal Information Section */}
-            <Section title="Personal Information" className="mt-4">
+            {/* Info Alert */}
+            <div className="flex items-start p-3 bg-blue-500/10 border border-blue-400/20 rounded-lg text-blue-200 text-sm">
+              <div className="w-4 h-4 rounded-full bg-blue-400 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                <span className="text-white text-xs font-bold">i</span>
+              </div>
+              <div>
+                Fields marked with a <span className="text-red-400">*</span> are required.
+                You will receive an email to verify your account.
+              </div>
+            </div>
+
+            {/* Personal Information */}
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-400 pl-3">
+                <h3 className="text-white font-medium">Personal Information</h3>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RHFInput
                   label="First Name"
@@ -99,8 +99,6 @@ export default function CreateAccountModal({
                   required
                   placeholder="Enter first name"
                   autoComplete="given-name"
-                  className="col-span-1"
-                  labelStyle="text-white"
                 />
 
                 <RHFInput
@@ -109,36 +107,34 @@ export default function CreateAccountModal({
                   error={errors.middleName}
                   placeholder="Enter middle name (optional)"
                   autoComplete="additional-name"
-                  className="col-span-1"
-                  labelStyle="text-white"
-                />
-
-                <RHFInput
-                  label="Last Name"
-                  register={register("lastName")}
-                  error={errors.lastName}
-                  required
-                  placeholder="Enter last name"
-                  autoComplete="family-name"
-                  className="col-span-1"
-                  labelStyle="text-white"
                 />
               </div>
-            </Section>
 
-            {/* Contact Information Section */}
-            <Section title="Contact Information" className="mt-4">
+              <RHFInput
+                label="Last Name"
+                register={register("lastName")}
+                error={errors.lastName}
+                required
+                placeholder="Enter last name"
+                autoComplete="family-name"
+              />
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-400 pl-3">
+                <h3 className="text-white font-medium">Contact Information</h3>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RHFInput
                   label="Primary Email"
                   register={register("primaryEmail")}
                   error={errors.primaryEmail}
-                  type="email"
                   required
+                  type="email"
                   placeholder="Enter primary email"
                   autoComplete="email"
-                  className="col-span-1"
-                  labelStyle="text-white"
                 />
 
                 <RHFInput
@@ -147,19 +143,18 @@ export default function CreateAccountModal({
                   error={errors.secondaryEmail}
                   type="email"
                   placeholder="Enter secondary email (optional)"
-                  className="col-span-1"
-                  labelStyle="text-white"
+                  autoComplete="email"
                 />
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RHFInput
                   label="Mobile Phone"
                   register={register("mobilePhone")}
                   error={errors.mobilePhone}
                   type="tel"
                   placeholder="Enter mobile phone (optional)"
-                  autoComplete="mobile tel"
-                  className="col-span-1"
-                  labelStyle="text-white"
+                  autoComplete="tel"
                 />
 
                 <RHFInput
@@ -168,15 +163,17 @@ export default function CreateAccountModal({
                   error={errors.workPhone}
                   type="tel"
                   placeholder="Enter work phone (optional)"
-                  autoComplete="work tel"
-                  className="col-span-1"
-                  labelStyle="text-white"
+                  autoComplete="tel"
                 />
               </div>
-            </Section>
+            </div>
 
-            {/* Security Information Section */}
-            <Section title="Security Information" className="mt-4">
+            {/* Security Information */}
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-400 pl-3">
+                <h3 className="text-white font-medium">Security Information</h3>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <RHFInput
                   label="Password"
@@ -186,8 +183,6 @@ export default function CreateAccountModal({
                   required
                   placeholder="Enter password"
                   autoComplete="new-password"
-                  className="col-span-1"
-                  labelStyle="text-white"
                 />
 
                 <RHFInput
@@ -198,33 +193,33 @@ export default function CreateAccountModal({
                   required
                   placeholder="Confirm password"
                   autoComplete="new-password"
-                  className="col-span-1"
-                  labelStyle="text-white"
                 />
               </div>
-            </Section>
+            </div>
           </div>
 
           {/* Footer */}
-          <DialogFooter className="px-6 py-3 border-t border-white/10 bg-slate-900/50 backdrop-blur-sm flex-shrink-0 flex justify-end space-x-3">
+          <DialogFooter className="px-6 py-4 border-t border-white/10 flex-shrink-0 flex justify-end space-x-3 rounded-b-2xl">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
               disabled={isSubmitting}
-              className="px-4 py-2 text-sm"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className={`px-4 py-2 text-sm text-white ${isSubmitting
-                ? "bg-blue-300 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-                }`}
             >
-              {isSubmitting ? "Creating Account..." : "Create Account"}
+              {isSubmitting ? (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                  Creating Account...
+                </div>
+              ) : (
+                'Create Account'
+              )}
             </Button>
           </DialogFooter>
         </form>

@@ -36,14 +36,14 @@ export default function DataFilterPanel({
     return (
         <div className="space-y-3">
             {/* Filter Card */}
-            <div className="bg-white rounded-lg border border-slate-200 p-3">
+            <div className="bg-slate-800 rounded-lg border border-slate-600 p-3">
                 {/* Header */}
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                    <h2 className="text-sm font-medium text-slate-900">Filters</h2>
+                <div className="flex items-center justify-between border-b border-slate-600 pb-2 mb-3">
+                    <h2 className="text-sm font-medium text-white">Filters</h2>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-xs h-6 px-2 text-slate-600 hover:text-slate-900"
+                        className="text-xs h-6 px-2 text-slate-300 hover:text-white hover:bg-slate-700"
                         onClick={onReset}
                     >
                         Reset all
@@ -83,14 +83,14 @@ export default function DataFilterPanel({
                         placeholder="Search in all fields..."
                         value={searchText}
                         onChange={(e) => onSearchChange(e.target.value)}
-                        className="w-full h-8 px-2 py-1 rounded-md border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                        className="w-full h-8 px-2 py-1 rounded-md border border-slate-600 bg-slate-700 text-white placeholder:text-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
                     />
                 </div>
 
                 {/* Download CSV Button */}
                 <button
                     onClick={onDownloadCSV}
-                    className="flex items-center w-full justify-center space-x-1 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-xs font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200"
+                    className="flex items-center w-full justify-center space-x-1 px-3 py-1.5 bg-slate-700 border border-slate-600 rounded-md text-xs font-medium text-slate-200 hover:bg-slate-600 hover:border-slate-500 transition-colors duration-200"
                 >
                     <Download className="w-3.5 h-3.5" />
                     <span>Download CSV</span>
@@ -98,14 +98,14 @@ export default function DataFilterPanel({
             </div>
 
             {/* Info Box */}
-            {(infoTitle || infoText) && <div className="bg-blue-50 rounded-lg border border-blue-100 p-2.5">
+            {(infoTitle || infoText) && <div className="bg-blue-800 rounded-lg border border-blue-600 p-2.5">
                 <div className="flex gap-2">
-                    <Info className="w-3.5 h-3.5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Info className="w-3.5 h-3.5 text-blue-200 flex-shrink-0 mt-0.5" />
                     <div className="space-y-0.5">
-                        <p className="text-xs font-medium text-blue-900">
+                        <p className="text-xs font-medium text-blue-100">
                             {infoTitle}
                         </p>
-                        <p className="text-xs text-blue-700">
+                        <p className="text-xs text-blue-200">
                             {infoText}
                         </p>
                     </div>

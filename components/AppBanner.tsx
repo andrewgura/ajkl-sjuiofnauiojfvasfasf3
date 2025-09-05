@@ -26,7 +26,7 @@ export function AppBanner({ isLoginPage = false }: AppBannerProps) {
     }
 
     return (
-        <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-800 backdrop-blur-sm border-b border-white/10 w-full h-16 grid grid-cols-3 items-center px-6 relative z-10">
+        <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-800 border-b border-slate-700 w-full h-16 grid grid-cols-3 items-center px-6 relative z-10">
             {/* Left Column */}
             <div className="flex items-center gap-4 mt-1">
                 {/* FAA */}
@@ -73,7 +73,7 @@ export function AppBanner({ isLoginPage = false }: AppBannerProps) {
                         {/* User Info */}
                         <div className="text-white text-sm mr-4">
                             <div className="font-medium">{session.user.firstName} {session.user.lastName}</div>
-                            <div className="text-blue-200 text-xs">{session.user.email}</div>
+                            <div className="text-slate-300 text-xs">{session.user.email}</div>
                         </div>
 
                         {/* User Settings */}
@@ -82,7 +82,7 @@ export function AppBanner({ isLoginPage = false }: AppBannerProps) {
                             onClick={handleUserSettings}
                             text='Settings'
                             variant="ghost"
-                            className="text-white hover:bg-white/10 hover:text-white"
+                            className="text-white hover:bg-slate-700 hover:text-white"
                         />
 
                         {/* Logout */}
@@ -91,7 +91,7 @@ export function AppBanner({ isLoginPage = false }: AppBannerProps) {
                             text="Logout"
                             onClick={handleLogout}
                             variant="destructive"
-                            className="bg-red-400 hover:bg-red-700 text-white"
+                            className="bg-red-600 hover:bg-red-700 text-white"
                         />
                     </div>
                 )}

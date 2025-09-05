@@ -4,16 +4,24 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle } from 'lucide-react';
-import { deleteUserCompletely } from '@/lib/actions/admin-database/database-actions';
+import { autoVerifyAccount, deleteUserCompletely } from '@/lib/actions/admin-database/database-actions';
+
+
 
 export default function DatabaseActionsPage() {
-    const [userId, setUserId] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [message, setMessage] = useState('');
+    // Delete User State
+    const [userId, setUserId] = useState<string>('');
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [message, setMessage] = useState<string>('');
     const [messageType, setMessageType] = useState<'success' | 'error' | ''>('');
 
-    const handleDeleteUser = async () => {
+    // Verify Account State
+    const [verifyUserId, setVerifyUserId] = useState<string>('');
+    const [isVerifying, setIsVerifying] = useState<boolean>(false);
+    const [verifyMessage, setVerifyMessage] = useState<string>('');
+    const [verifyMessageType, setVerifyMessageType] = useState<'success' | 'error' | ''>('');
+
+    const handleDeleteUser = async (): Promise<void> => {
         if (!userId.trim()) {
             setMessage('Please enter a User ID');
             setMessageType('error');
@@ -48,10 +56,93 @@ export default function DatabaseActionsPage() {
         }
     };
 
+    const handleVerifyAccount = async (): Promise<void> => {
+        if (!verifyUserId.trim()) {
+            setVerifyMessage('Please enter a User ID');
+            setVerifyMessageType('error');
+            return;
+        }
+
+        if (!confirm(`Are you sure you want to auto-verify the account for user ${verifyUserId}?`)) {
+            return;
+        }
+
+        setIsVerifying(true);
+        setVerifyMessage('');
+        setVerifyMessageType('');
+
+        try {
+            const result = await autoVerifyAccount(verifyUserId.trim());
+
+            if (result.success) {
+                setVerifyMessage(result.message || 'Account verified successfully');
+                setVerifyMessageType('success');
+                setVerifyUserId('');
+            } else {
+                setVerifyMessage(result.error || 'Failed to verify account');
+                setVerifyMessageType('error');
+            }
+        } catch (error) {
+            setVerifyMessage('An unexpected error occurred');
+            setVerifyMessageType('error');
+            console.error('Verify account error:', error);
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
     return (
         <div className="container mx-auto py-6 max-w-4xl">
-
             <div className="space-y-6">
+                {/* Auto Verify Account Card */}
+                <Card className="border-green-200">
+                    <CardHeader>
+                        <CardTitle className="flex items-center text-green-700">
+                            Auto Verify Account
+                        </CardTitle>
+                        <CardDescription>
+                            Automatically verify a user's email address and activate their account.
+                            This will set ACCOUNT_ACTIVE to 1 and mark all verification tokens as used.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+
+                        <div className="flex items-end gap-3">
+                            <div className="flex-1">
+                                <label htmlFor="verifyUserId" className="block text-sm font-medium text-gray-700 mb-1">
+                                    User ID
+                                </label>
+                                <Input
+                                    id="verifyUserId"
+                                    type="text"
+                                    placeholder="Enter User ID (UUID)"
+                                    value={verifyUserId}
+                                    onChange={(e) => setVerifyUserId(e.target.value)}
+                                    disabled={isVerifying}
+                                    className="font-mono text-sm"
+                                />
+                            </div>
+                            <Button
+                                onClick={handleVerifyAccount}
+                                disabled={isVerifying || !verifyUserId.trim()}
+                                className="px-6 bg-green-600 hover:bg-green-700"
+                            >
+                                {isVerifying ? 'Verifying...' : 'Verify Account'}
+                            </Button>
+                        </div>
+
+                        {verifyMessage && (
+                            <div className={`p-3 rounded-md text-sm ${verifyMessageType === 'success'
+                                ? 'bg-green-50 text-green-700 border border-green-200'
+                                : 'bg-red-50 text-red-700 border border-red-200'
+                                }`}>
+                                {verifyMessage}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Delete User Card */}
                 <Card className="border-red-200">
                     <CardHeader>
                         <CardTitle className="flex items-center text-red-700">
@@ -63,12 +154,6 @@ export default function DatabaseActionsPage() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 flex items-start">
-                            <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" />
-                            <div className="text-sm">
-                                <strong className="text-yellow-800">Warning:</strong> This action is irreversible and will permanently delete all user data.
-                            </div>
-                        </div>
 
                         <div className="flex items-end gap-3">
                             <div className="flex-1">

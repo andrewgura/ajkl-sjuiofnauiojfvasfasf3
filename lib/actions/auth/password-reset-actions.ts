@@ -8,6 +8,7 @@ import {
     validatePasswordResetRequest,
     validatePasswordReset,
 } from "@/lib/validation/password-reset-validate";
+import { sendPasswordResetEmail } from "@/lib/email/email-service";
 
 interface ActionResult {
     success: boolean;
@@ -90,15 +91,8 @@ export async function initiatePasswordReset(formData: FormData): Promise<ActionR
             CREATED_DATE: new Date(),
         });
 
-        // Reset Link
-        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const resetLink = `${baseUrl}/reset-password/${token}`;
-
-        // TODO: Replace with actual email sending
-        console.log(`Email: ${normalizedEmail}`);
-        console.log(`Name: ${user.FIRST_NAME}`);
-        console.log(`Reset Link: ${resetLink}`);
-        console.log(`Expires: ${expiresAt.toLocaleString()}`);
+        // Send Email
+        await sendPasswordResetEmail(normalizedEmail, token)
 
         return {
             success: true,

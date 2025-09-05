@@ -138,19 +138,19 @@ export function UserManagementClient({ initialUsers = [], initialTotal = 0 }: Us
 
                 {/* Main content */}
                 <div className="flex-1">
-                    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                        <div className="p-4 border-b border-slate-100 flex justify-between">
+                    <div className="rounded-lg border border-slate-600 overflow-hidden">
+                        <div className="p-4 border-b border-slate-600 flex justify-between">
                             <div className="flex space-x-2">
                                 <Button
                                     variant="outline"
                                     size="sm"
                                     onClick={refreshUsers}
-                                    className="text-xs"
+                                    className="text-xs bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
                                 >
                                     Refresh
                                 </Button>
                                 <Button
-                                    className="bg-blue-600 hover:bg-blue-700 text-xs"
+                                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-xs"
                                     onClick={() => setAddModalOpen(true)}
                                 >
                                     <UserPlus className="w-4 h-4 mr-2" />
@@ -169,7 +169,7 @@ export function UserManagementClient({ initialUsers = [], initialTotal = 0 }: Us
                         </div>
 
                         {filteredUsers.length > 0 && (
-                            <div className="border-t border-slate-100">
+                            <div className="border-t border-slate-600">
                                 <Pagination
                                     currentPage={currentPage}
                                     totalItems={filteredUsers.length}

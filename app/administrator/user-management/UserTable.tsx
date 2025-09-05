@@ -1,6 +1,4 @@
-"use client";
-
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -10,7 +8,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/utils/date-utils";
 import EmptyTableState from "@/components/shared/EmptyTableState";
 import EditUserModal from "./modals/EditUserModal";
 import { User } from "@/types/user";
@@ -19,58 +16,59 @@ interface UserTableProps {
     data: User[];
     currentPage: number;
     itemsPerPage: number;
-    onUserUpdated?: () => void;
-    isLoading?: boolean;
+    onUserUpdated: () => void;
 }
 
-export default function UserTable({
-    data,
-    currentPage,
-    itemsPerPage,
-    onUserUpdated,
-    isLoading = false
-}: UserTableProps) {
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+export default function UserTable({ data, currentPage, itemsPerPage, onUserUpdated }: UserTableProps) {
     const [editModalOpen, setEditModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentData = data.slice(startIndex, endIndex);
 
-    const handleEditUser = useCallback((user: User) => {
-        setSelectedUser(user);
-        setEditModalOpen(true);
-    }, []);
+    const formatDate = (dateString: string | null): string => {
+        if (!dateString) return '—';
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    };
 
-    const handleEditModalClose = useCallback((open: boolean) => {
-        setEditModalOpen(open);
-        if (!open) {
-            setSelectedUser(null);
-        }
-    }, []);
-
-    const handleUserUpdated = useCallback(() => {
-        onUserUpdated?.();
-    }, [onUserUpdated]);
-
-    const getStatusBadgeVariant = (user: User) => {
+    const getStatusBadgeVariant = (user: User): "default" | "secondary" | "destructive" | "outline" => {
         if (user.accountLocked) return "destructive";
         if (!user.accountActive) return "secondary";
         return "default";
     };
 
-    const getStatusText = (user: User) => {
+    const getStatusText = (user: User): string => {
         if (user.accountLocked) return "Locked";
         if (!user.accountActive) return "Inactive";
         return "Active";
     };
 
-    // Empty state
-    if (data.length === 0 && !isLoading) {
+    const handleEditUser = (user: User) => {
+        setSelectedUser(user);
+        setEditModalOpen(true);
+    };
+
+    const handleEditModalClose = () => {
+        setEditModalOpen(false);
+        setSelectedUser(null);
+    };
+
+    const handleUserUpdated = () => {
+        onUserUpdated();
+        handleEditModalClose();
+    };
+
+    if (data.length === 0) {
         return (
             <EmptyTableState
                 title="No users found"
-                message="No users match your current filter criteria. Try adjusting your filters or search terms."
+                message="Try adjusting your filters or search terms."
             />
         );
     }
@@ -79,26 +77,26 @@ export default function UserTable({
         <div>
             <Table>
                 <TableHeader>
-                    <TableRow className="bg-slate-50/80">
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700 w-32">
+                    <TableRow className="bg-slate-700/50 border-b border-slate-600">
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200 w-32">
                             Name
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700">
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200">
                             Email
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700">
-                            Phone
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200">
+                            User ID
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700">
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200">
                             Roles
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700">
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200">
                             Status
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700 w-24">
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200 w-24">
                             Last Sign In
                         </TableHead>
-                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-700" />
+                        <TableHead className="py-2 px-3 font-medium text-xs text-slate-200" />
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -106,15 +104,15 @@ export default function UserTable({
                         currentData.map((user) => (
                             <TableRow
                                 key={user.id}
-                                className="transition-colors border-b hover:bg-slate-50/70"
+                                className="transition-colors border-b border-slate-600 hover:bg-slate-700/30"
                             >
                                 <TableCell className="py-2 px-3">
                                     <div className="flex flex-col">
-                                        <span className="text-xs font-medium text-slate-700">
+                                        <span className="text-xs font-medium text-slate-200">
                                             {`${user.firstName} ${user.lastName}`}
                                         </span>
                                         {user.middleName && (
-                                            <span className="text-xs text-slate-500">
+                                            <span className="text-xs text-slate-400">
                                                 {user.middleName}
                                             </span>
                                         )}
@@ -122,11 +120,11 @@ export default function UserTable({
                                 </TableCell>
                                 <TableCell className="py-2 px-3">
                                     <div className="flex flex-col">
-                                        <span className="text-xs text-slate-600">
+                                        <span className="text-xs text-slate-300">
                                             {user.primaryEmail}
                                         </span>
                                         {user.secondaryEmail && (
-                                            <span className="text-xs text-slate-500">
+                                            <span className="text-xs text-slate-400">
                                                 {user.secondaryEmail}
                                             </span>
                                         )}
@@ -134,19 +132,9 @@ export default function UserTable({
                                 </TableCell>
                                 <TableCell className="py-2 px-3">
                                     <div className="flex flex-col">
-                                        {user.mobilePhone && (
-                                            <span className="text-xs text-slate-600">
-                                                Mobile: {user.mobilePhone}
-                                            </span>
-                                        )}
-                                        {user.workPhone && (
-                                            <span className="text-xs text-slate-500">
-                                                Work: {user.workPhone}
-                                            </span>
-                                        )}
-                                        {!user.mobilePhone && !user.workPhone && (
-                                            <span className="text-xs text-slate-400">—</span>
-                                        )}
+                                        <span className="text-xs text-slate-300 font-mono">
+                                            {user.id}
+                                        </span>
                                     </div>
                                 </TableCell>
                                 <TableCell className="py-2 px-3">
@@ -155,7 +143,7 @@ export default function UserTable({
                                             <Badge
                                                 key={role}
                                                 variant="outline"
-                                                className="text-xs px-2 py-0 h-5"
+                                                className="text-xs px-2 py-0 h-5 border-slate-500 text-slate-300"
                                             >
                                                 {role}
                                             </Badge>
@@ -171,14 +159,14 @@ export default function UserTable({
                                     </Badge>
                                 </TableCell>
                                 <TableCell className="py-2 px-3">
-                                    <span className="text-xs text-slate-600">
+                                    <span className="text-xs text-slate-300">
                                         {user.lastLogin ? formatDate(user.lastLogin) : 'Never'}
                                     </span>
                                 </TableCell>
                                 <TableCell className="py-2 px-3">
                                     <button
                                         onClick={() => handleEditUser(user)}
-                                        className="text-xs text-blue-600 hover:text-blue-700 font-normal hover:underline"
+                                        className="text-xs text-blue-400 hover:text-blue-300 font-normal hover:underline"
                                         disabled={isLoading}
                                     >
                                         Edit

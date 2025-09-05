@@ -133,8 +133,8 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                     variant="outline"
                     size="sm"
                     className={`h-8 px-3 ${isPasswordExpiringSoon
-                        ? "text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200"
-                        : "text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200"
+                        ? "text-orange-300 hover:text-orange-200 hover:bg-orange-800 border-orange-600"
+                        : "text-blue-300 hover:text-blue-200 hover:bg-blue-800 border-blue-600"
                         }`}
                 >
                     <KeyRound className="mr-2 h-3 w-3" />
@@ -142,9 +142,9 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md bg-slate-900 border border-slate-600">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
+                    <DialogTitle className="flex items-center gap-2 text-white">
                         <KeyRound className="w-4 h-4" />
                         Change Password
                     </DialogTitle>
@@ -153,9 +153,9 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     {/* Password expiring */}
                     {isPasswordExpiringSoon && (
-                        <Alert className="border-orange-200 bg-orange-50">
-                            <AlertTriangle className="h-4 w-4 text-orange-600" />
-                            <AlertDescription className="text-orange-700">
+                        <Alert className="border-orange-600 bg-orange-800">
+                            <AlertTriangle className="h-4 w-4 text-orange-200" />
+                            <AlertDescription className="text-orange-100">
                                 {daysUntilExpiry! > 0
                                     ? `Your password will expire in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? '' : 's'}.`
                                     : "Your password has expired."
@@ -177,7 +177,7 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                         <button
                             type="button"
                             onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                            className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 top-8 text-slate-400 hover:text-slate-200"
                         >
                             {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
@@ -196,7 +196,7 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                         <button
                             type="button"
                             onClick={() => setShowNewPassword(!showNewPassword)}
-                            className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 top-8 text-slate-400 hover:text-slate-200"
                         >
                             {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
@@ -215,34 +215,34 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                         <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
+                            className="absolute right-3 top-8 text-slate-400 hover:text-slate-200"
                         >
                             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                     </div>
 
                     {/* Password Requirements */}
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs font-medium text-gray-700 mb-2">Password Requirements:</p>
-                        <ul className="text-xs text-gray-600 space-y-1">
+                    <div className="p-3 bg-slate-800 border border-slate-600 rounded-lg">
+                        <p className="text-xs font-medium text-slate-200 mb-2">Password Requirements:</p>
+                        <ul className="text-xs text-slate-300 space-y-1">
                             <li className="flex items-center gap-1">
-                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && newPassword.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && newPassword.length >= 8 ? 'bg-green-400' : 'bg-red-500'}`} />
                                 At least 8 characters long
                             </li>
                             <li className="flex items-center gap-1">
-                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[A-Z]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[A-Z]/.test(newPassword) ? 'bg-green-400' : 'bg-red-500'}`} />
                                 One uppercase letter
                             </li>
                             <li className="flex items-center gap-1">
-                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[a-z]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[a-z]/.test(newPassword) ? 'bg-green-400' : 'bg-red-500'}`} />
                                 One lowercase letter
                             </li>
                             <li className="flex items-center gap-1">
-                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[0-9]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[0-9]/.test(newPassword) ? 'bg-green-400' : 'bg-red-500'}`} />
                                 One number
                             </li>
                             <li className="flex items-center gap-1">
-                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[^A-Za-z0-9]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-300'}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${newPassword && /[^A-Za-z0-9]/.test(newPassword) ? 'bg-green-400' : 'bg-red-500'}`} />
                                 One special character
                             </li>
                         </ul>
@@ -255,7 +255,7 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                             variant="outline"
                             onClick={() => setShouldClose(true)}
                             disabled={isSubmitting}
-                            className="h-8 px-4 text-sm"
+                            className="h-8 px-4 text-sm bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
                         >
                             Cancel
                         </Button>
@@ -264,8 +264,8 @@ export function PasswordChangeModal({ passwordExpire }: PasswordChangeModalProps
                             type="submit"
                             disabled={!canSubmit}
                             className={`h-8 px-4 text-sm ${canSubmit
-                                ? "bg-blue-600 hover:bg-blue-700 text-white"
-                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                ? "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                                : "bg-slate-600 text-slate-400 cursor-not-allowed"
                                 }`}
                         >
                             Change Password

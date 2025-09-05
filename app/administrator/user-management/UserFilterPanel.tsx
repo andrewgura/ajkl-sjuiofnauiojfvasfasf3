@@ -4,7 +4,6 @@ import DataFilterPanel from "@/components/shared/filters/DataFilterPanel";
 import { SelectInput } from "@/components/shared/SelectInput";
 import { USER_ROLES } from "@/utils/user-roles";
 
-// Extended DataFilterPanel to include role filter
 interface UserFilterPanelProps {
     startDate: Date | null;
     endDate: Date | null;
@@ -29,7 +28,7 @@ export default function UserFilterPanel({
 
     const RoleFilter = () => (
         <div className="space-y-2 mb-4">
-            <label className="text-sm font-medium text-slate-700 block mb-1.5">
+            <label className="text-sm font-medium text-white block mb-1.5">
                 User Role
             </label>
             <SelectInput

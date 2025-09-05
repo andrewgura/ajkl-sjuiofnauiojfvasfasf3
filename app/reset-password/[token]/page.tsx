@@ -20,7 +20,7 @@ interface ResetPasswordPageProps {
 }
 
 interface TokenValidationState {
-    isValid: boolean | null; // null = loading, true = valid, false = invalid
+    isValid: boolean | null;
     userEmail?: string;
     error?: string;
 }
@@ -87,7 +87,6 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
 
             if (result.success) {
                 setResetComplete(true);
-                // Redirect to login after a few seconds
                 setTimeout(() => {
                     router.push('/login');
                 }, 3000);
@@ -111,13 +110,18 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
     // Loading state
     if (tokenState.isValid === null) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
-                <AppBanner />
-                <div className="flex-1 flex items-center justify-center p-4">
+            <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 relative overflow-hidden flex flex-col">
+                <AppBanner isLoginPage={true} />
+                <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-4">
                     <div className="w-full max-w-md">
-                        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            <p className="text-gray-600">Validating</p>
+                        <div className="bg-white/10 rounded-2xl border border-white/20 shadow-2xl p-8">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <KeyRound className="w-8 h-8 text-white animate-pulse" />
+                                </div>
+                                <h1 className="text-xl font-bold text-white mb-2">Validating Reset Token</h1>
+                                <p className="text-blue-200">Please wait while we verify your request...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,26 +130,24 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
     }
 
     // Invalid token state
-    if (!tokenState.isValid) {
+    if (tokenState.isValid === false) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
-                <AppBanner />
-                <div className="flex-1 flex items-center justify-center p-4">
+            <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 relative overflow-hidden flex flex-col">
+                <AppBanner isLoginPage={true} />
+                <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-4">
                     <div className="w-full max-w-md">
-                        <div className="bg-white rounded-lg shadow-lg p-8">
-                            <div className="text-center mb-6">
-                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <AlertTriangle className="w-8 h-8 text-red-600" />
+                        <div className="bg-white/10 rounded-2xl border border-white/20 shadow-2xl p-8">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-gradient-to-br from-red-400 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <AlertTriangle className="w-8 h-8 text-white" />
                                 </div>
-                                <h1 className="text-2xl font-bold text-gray-900">Invalid Reset Link</h1>
-                                <p className="text-gray-600 mt-2">
-                                    {tokenState.error || "This password reset link is invalid or has expired."}
+                                <h1 className="text-xl font-bold text-white mb-2">Invalid Reset Token</h1>
+                                <p className="text-red-200 mb-6">
+                                    {tokenState.error || "This reset link is invalid or has expired."}
                                 </p>
-                            </div>
-                            <div className="space-y-4">
                                 <Button
                                     onClick={() => router.push('/login')}
-                                    className="w-full"
+                                    className="w-full h-10 bg-blue-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                                 >
                                     Back to Login
                                 </Button>
@@ -160,18 +162,21 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
     // Success state
     if (resetComplete) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
-                <AppBanner />
-                <div className="flex-1 flex items-center justify-center p-4">
+            <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 relative overflow-hidden flex flex-col">
+                <AppBanner isLoginPage={true} />
+                <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-4">
                     <div className="w-full max-w-md">
-                        <div className="bg-white rounded-lg shadow-lg p-8">
+                        <div className="bg-white/10 rounded-2xl border border-white/20 shadow-2xl p-8">
                             <div className="text-center">
-                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CheckCircle className="w-8 h-8 text-green-600" />
+                                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-green-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <CheckCircle className="w-8 h-8 text-white" />
                                 </div>
-                                <h1 className="text-2xl font-bold text-gray-900 mb-2">Password Reset Complete</h1>
-                                <p className="text-gray-600 mb-6">
+                                <h1 className="text-xl font-bold text-white mb-2">Password Reset Complete</h1>
+                                <p className="text-green-200 mb-6">
                                     Your password has been successfully updated. You can now log in with your new password.
+                                </p>
+                                <p className="text-blue-200 text-sm">
+                                    Redirecting to login page in a few seconds...
                                 </p>
                             </div>
                         </div>
@@ -183,88 +188,101 @@ export default function ResetPasswordPage({ params }: ResetPasswordPageProps) {
 
     // Reset password form
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
-            <AppBanner />
-            <div className="flex-1 flex items-center justify-center p-4">
+        <div className="h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 relative overflow-hidden flex flex-col">
+            <AppBanner isLoginPage={true} />
+
+            <div className="relative z-10 flex-1 flex items-center justify-center px-6 py-4">
                 <div className="w-full max-w-md">
-                    <div className="bg-white rounded-lg shadow-lg p-8">
+                    <div className="bg-white/10 rounded-2xl border border-white/20 shadow-2xl p-8">
                         <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <KeyRound className="w-8 h-8 text-blue-600" />
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <KeyRound className="w-8 h-8 text-white" />
                             </div>
-                            <h1 className="text-2xl font-bold text-gray-900">Reset Your Password</h1>
-                            <p className="text-gray-600 mt-2">
+                            <h1 className="text-xl font-bold text-white mb-1">Reset Your Password</h1>
+                            <p className="text-slate-300">
                                 Create a new password for {tokenState.userEmail}
                             </p>
                         </div>
 
                         {errors.root && (
-                            <Alert className="mb-4 border-red-200 bg-red-50">
-                                <AlertTriangle className="h-4 w-4 text-red-600 color-red" color="red" />
-                                <AlertDescription className="text-red-600">
-                                    {errors.root.message}
-                                </AlertDescription>
-                            </Alert>
+                            <div className="flex items-center p-3 bg-red-500/10 border border-red-400/20 rounded-lg text-red-200 text-sm mb-4">
+                                <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <span>{errors.root.message}</span>
+                            </div>
                         )}
 
-                        <Alert className="mb-6 border-blue-200 bg-blue-50">
-                            <AlertDescription className="text-blue-800">
-                                <strong>Password Requirements:</strong>
-                                <ul className="list-disc list-inside mt-2 text-sm space-y-1">
+                        <div className="flex items-start p-3 bg-blue-500/10 border border-blue-400/20 rounded-lg text-blue-200 text-sm mb-6">
+                            <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" />
+                            <div>
+                                <div className="font-medium mb-1">Password Requirements:</div>
+                                <ul className="list-disc list-inside space-y-1 text-xs">
                                     <li>12-24 characters long</li>
                                     <li>At least 3 of: uppercase, lowercase, numbers, symbols</li>
                                     <li>No more than 2 repeated characters in a row</li>
                                     <li>Different from your current password</li>
                                 </ul>
-                            </AlertDescription>
-                        </Alert>
+                            </div>
+                        </div>
 
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="password">New Password</Label>
+                            <div>
+                                <Label className="text-white text-sm font-medium mb-2 block">
+                                    New Password <span className="text-red-400">*</span>
+                                </Label>
                                 <Input
-                                    id="password"
-                                    type="password"
                                     {...register("password")}
-                                    className={errors.password ? "border-red-500" : ""}
+                                    type="password"
                                     placeholder="Enter your new password"
+                                    className={`bg-white/5 border-white/20 text-white placeholder:text-blue-200 focus:border-blue-400 focus:ring-blue-400/30 h-10 ${errors.password ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30' : ''
+                                        }`}
                                 />
                                 {errors.password && (
-                                    <p className="text-sm text-red-600">{errors.password.message}</p>
+                                    <p className="text-xs text-red-300 mt-1">{errors.password.message}</p>
                                 )}
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                            <div>
+                                <Label className="text-white text-sm font-medium mb-2 block">
+                                    Confirm New Password <span className="text-red-400">*</span>
+                                </Label>
                                 <Input
-                                    id="confirmPassword"
-                                    type="password"
                                     {...register("confirmPassword")}
-                                    className={errors.confirmPassword ? "border-red-500" : ""}
+                                    type="password"
                                     placeholder="Confirm your new password"
+                                    className={`bg-white/5 border-white/20 text-white placeholder:text-blue-200 focus:border-blue-400 focus:ring-blue-400/30 h-10 ${errors.confirmPassword ? 'border-red-400 focus:border-red-400 focus:ring-red-400/30' : ''
+                                        }`}
                                 />
                                 {errors.confirmPassword && (
-                                    <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                                    <p className="text-xs text-red-300 mt-1">{errors.confirmPassword.message}</p>
                                 )}
                             </div>
 
                             <Button
                                 type="submit"
-                                className="w-full"
                                 disabled={isSubmitting}
+                                className="w-full h-10 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                             >
-                                {isSubmitting ? "Resetting Password..." : "Reset Password"}
+                                {isSubmitting ? (
+                                    <div className="flex items-center">
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                        Resetting Password...
+                                    </div>
+                                ) : (
+                                    'Reset Password'
+                                )}
                             </Button>
-                        </form>
 
-                        <div className="mt-6 text-center">
-                            <button
-                                onClick={() => router.push('/login')}
-                                className="text-sm text-blue-600 hover:underline"
-                            >
-                                Back to Login
-                            </button>
-                        </div>
+                            <div className="pt-3 border-t border-slate-700">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => router.push('/login')}
+                                    className="w-full h-9 bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:border-slate-500"
+                                >
+                                    Back to Login
+                                </Button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
